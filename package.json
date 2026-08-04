@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "drizzle-kit": "^0.31.10",
     "tsx": "^4.23.5",
     "typescript": "^7.0.2"
   },
@@ -10,12 +11,16 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "drizzle-orm": "^0.45.2",
     "esbuild": "^0.28.1",
+    "postgres": "^3.4.9",
     "undici-types": "^8.3.0"
   },
   "scripts": {
     "start": "tsx ./src/index.ts",
-    "test": "node --test \"test/**/*.test.mjs\""
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
   },
   "repository": {
     "type": "git",

@@ -17,5 +17,8 @@ test("login sets the current user in config", () => {
     run("cat", [process.env.HOME + "/.gatorconfig.json"])
   );
   assert.equal(config.current_user_name, "alice");
-  assert.equal(config.db_url, "postgres://example");
+  assert.equal(
+    config.db_url,
+    "postgres://postgres:postgres@localhost:5432/gator?sslmode=disable"
+  );
 });
