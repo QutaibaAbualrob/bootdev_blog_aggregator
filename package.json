@@ -1,0 +1,31 @@
+{
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.5",
+    "typescript": "^7.0.2"
+  },
+  "name": "blog",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "esbuild": "^0.28.1",
+    "undici-types": "^8.3.0"
+  },
+  "scripts": {
+    "start": "tsx ./src/index.ts",
+    "test": "node --test \"test/**/*.test.mjs\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QutaibaAbualrob/blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QutaibaAbualrob/blog/issues"
+  },
+  "homepage": "https://github.com/QutaibaAbualrob/blog#readme"
+}
