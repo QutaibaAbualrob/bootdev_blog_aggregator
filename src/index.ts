@@ -12,6 +12,14 @@ import {
 } from "./commands.js";
 import { middlewareLoggedIn } from "./middleware.js";
 
+/**
+ * Entry point of the Gator CLI.
+ *
+ * Registers every command in the registry, then dispatches the first CLI
+ * argument as the command name and passes the remaining arguments through.
+ * Exits with a non-zero status code when invoked without arguments or when a
+ * command fails.
+ */
 async function main() {
   const registry: CommandsRegistry = {};
   registerCommand(registry, "login", handlerLogin);

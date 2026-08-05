@@ -3,6 +3,10 @@ import { desc, eq, and } from "drizzle-orm";
 import { db } from "../index.js";
 import { posts, feedFollows, feeds } from "../schema.js";
 
+/**
+ * Inserts a post for the given feed, skipping it silently when a post with
+ * the same URL already exists.
+ */
 export async function createPost(input: {
   title: string;
   url: string;
@@ -24,6 +28,10 @@ export async function createPost(input: {
   return result;
 }
 
+/**
+ * Returns the latest posts from feeds the given user follows, newest first,
+ * capped at the given limit.
+ */
 export async function getPostsForUser(userId: string, limit: number) {
   return db
     .select({

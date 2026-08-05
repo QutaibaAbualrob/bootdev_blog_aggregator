@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 
+/** A single post inside an RSS channel. */
 export type RSSItem = {
   title: string;
   link: string;
@@ -7,6 +8,7 @@ export type RSSItem = {
   pubDate: string;
 };
 
+/** The normalized structure of a parsed RSS 2.0 feed. */
 export type RSSFeed = {
   channel: {
     title: string;
@@ -16,6 +18,15 @@ export type RSSFeed = {
   };
 };
 
+/**
+ * Downloads an RSS feed from the given URL, parses its XML, and normalizes it
+ * into a {@link RSSFeed}.
+ *
+ * Items with missing or malformed fields are skipped.
+ *
+ * @throws if the document is not a valid RSS feed or the channel metadata is
+ * incomplete.
+ */
 export async function fetchFeed(feedURL: string): Promise<RSSFeed> {
   const res = await fetch(feedURL, {
     headers: { "User-Agent": "gator" },

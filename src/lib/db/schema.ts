@@ -1,5 +1,6 @@
 import { pgTable, timestamp, uuid, text, unique } from "drizzle-orm/pg-core";
 
+/** Registered users of the CLI. */
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -10,6 +11,7 @@ export const users = pgTable("users", {
   name: text("name").notNull().unique(),
 });
 
+/** RSS feeds known to the system, each owned by the user who added it. */
 export const feeds = pgTable("feeds", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -25,6 +27,7 @@ export const feeds = pgTable("feeds", {
   lastFetchedAt: timestamp("last_fetched_at"),
 });
 
+/** Many-to-many join linking users to the feeds they follow. */
 export const feedFollows = pgTable(
   "feed_follows",
   {
@@ -44,9 +47,12 @@ export const feedFollows = pgTable(
   (table) => [unique().on(table.userId, table.feedId)]
 );
 
+/** Row type of the feeds table. */
 export type Feed = typeof feeds.$inferSelect;
+/** Row type of the users table. */
 export type User = typeof users.$inferSelect;
 
+/** Individual posts scraped from feeds. */
 export const posts = pgTable("posts", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),

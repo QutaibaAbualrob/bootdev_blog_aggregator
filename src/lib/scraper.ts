@@ -5,6 +5,13 @@ import {
 } from "./db/queries/feeds.js";
 import { createPost } from "./db/queries/posts.js";
 
+/**
+ * Performs a single aggregation pass: picks the feed fetched least recently,
+ * downloads and parses it, saves any new posts, and marks the feed as fetched.
+ *
+ * No-op when no feeds exist. Posts with unparseable dates are skipped, and a
+ * failure to save one post does not stop the rest of the pass.
+ */
 export async function scrapeFeeds() {
   const feed = await getNextFeedToFetch();
   if (feed === undefined) {

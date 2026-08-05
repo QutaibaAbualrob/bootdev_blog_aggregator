@@ -3,6 +3,10 @@ import { eq, and, inArray } from "drizzle-orm";
 import { db } from "../index.js";
 import { feedFollows, feeds, users } from "../schema.js";
 
+/**
+ * Makes the given user follow the given feed and returns the follow row
+ * joined with the feed and user names.
+ */
 export async function createFeedFollow(userId: string, feedId: string) {
   const [newFeedFollow] = await db
     .insert(feedFollows)
@@ -27,6 +31,7 @@ export async function createFeedFollow(userId: string, feedId: string) {
   return result;
 }
 
+/** Returns every feed-follow row for a user, joined with feed and user names. */
 export async function getFeedFollowsForUser(userId: string) {
   return db
     .select({
@@ -44,6 +49,7 @@ export async function getFeedFollowsForUser(userId: string) {
     .where(eq(feedFollows.userId, userId));
 }
 
+/** Deletes the given user's follow of the feed at the given URL. */
 export async function deleteFeedFollowByUserAndURL(userId: string, url: string) {
   const feedIds = db.select({ id: feeds.id }).from(feeds).where(eq(feeds.url, url));
   await db

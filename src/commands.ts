@@ -20,8 +20,10 @@ import {
   resetUsers,
 } from "./lib/db/queries/users.js";
 
+/** Signature of a command handler invoked with the raw CLI arguments. */
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
+/** Logs in as an existing user by name, persisting the selection to the config file. */
 async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length === 0) {
     throw new Error("a username is required");
@@ -35,6 +37,7 @@ async function handlerLogin(cmdName: string, ...args: string[]) {
   console.log(`user ${username} has been set`);
 }
 
+/** Creates a new user and logs in as them. Throws if the name is already taken. */
 async function handlerRegister(cmdName: string, ...args: string[]) {
   if (args.length === 0) {
     throw new Error("a name is required");
@@ -49,11 +52,13 @@ async function handlerRegister(cmdName: string, ...args: string[]) {
   console.log(`user created: ${JSON.stringify(user)}`);
 }
 
+/** Deletes all users; their feeds, feed follows, and posts are removed via cascade. */
 async function handlerReset(cmdName: string, ...args: string[]) {
   await resetUsers();
   console.log("users reset");
 }
 
+/** Lists all registered users, marking the one currently logged in. */
 async function handlerUsers(cmdName: string, ...args: string[]) {
   const users = await getUsers();
   const currentUser = readConfig().currentUserName;
@@ -63,6 +68,12 @@ async function handlerUsers(cmdName: string, ...args: string[]) {
   }
 }
 
+/**
+ * Parses a duration string such as `10s`, `5m`, `1h`, or `500ms` into
+ * milliseconds.
+ *
+ * @throws if the string does not match the `<number><unit>` format.
+ */
 function parseDuration(durationStr: string): number {
   const regex = /^(\d+)(ms|s|m|h)$/;
   const match = durationStr.match(regex);
@@ -84,10 +95,15 @@ function parseDuration(durationStr: string): number {
   throw new Error(`invalid duration: ${durationStr}`);
 }
 
+/** Prints an error to stderr, unwrapping {@link Error} instances to their message. */
 function handleError(err: unknown) {
   console.error(err instanceof Error ? err.message : err);
 }
 
+/**
+ * Runs the feed aggregator loop: scrapes all feeds immediately, then again
+ * every `timeBetweenRequests` until the process receives SIGINT.
+ */
 async function handlerAgg(cmdName: string, ...args: string[]) {
   if (args.length < 1) {
     throw new Error("agg requires a time_between_reqs argument");
@@ -112,17 +128,20 @@ async function handlerAgg(cmdName: string, ...args: string[]) {
   });
 }
 
+/** Prints a feed and the user who created it to stdout. */
 function printFeed(feed: Feed, user: User) {
   console.log(`feed: ${feed.name}`);
   console.log(`url: ${feed.url}`);
   console.log(`user: ${user.name}`);
 }
 
+/** Prints a feed-follow relationship to stdout. */
 function printFeedFollow(feedName: string, userName: string) {
   console.log(`feed: ${feedName}`);
   console.log(`user: ${userName}`);
 }
 
+/** Creates a new feed and follows it on behalf of the given user. */
 async function handlerAddFeed(
   cmdName: string,
   user: User,
@@ -141,6 +160,7 @@ async function handlerAddFeed(
   printFeedFollow(feedFollow.feedName, feedFollow.userName);
 }
 
+/** Makes the given user follow an existing feed, looked up by URL. */
 async function handlerFollow(
   cmdName: string,
   user: User,
@@ -160,6 +180,7 @@ async function handlerFollow(
   printFeedFollow(feedFollow.feedName, feedFollow.userName);
 }
 
+/** Prints the names of all feeds the given user follows. */
 async function handlerFollowing(cmdName: string, user: User, ...args: string[]) {
   const follows = await getFeedFollowsForUser(user.id);
   for (const follow of follows) {
@@ -167,6 +188,7 @@ async function handlerFollowing(cmdName: string, user: User, ...args: string[]) 
   }
 }
 
+/** Stops the given user from following the feed at the given URL. */
 async function handlerUnfollow(
   cmdName: string,
   user: User,
@@ -186,6 +208,10 @@ async function handlerUnfollow(
   console.log(`user ${user.name} unfollowed feed: ${feed.name}`);
 }
 
+/**
+ * Prints the latest posts from the feeds the given user follows, newest
+ * first, capped at an optional limit (defaults to 2).
+ */
 async function handlerBrowse(
   cmdName: string,
   user: User,
@@ -207,6 +233,7 @@ async function handlerBrowse(
   }
 }
 
+/** Handlers for commands that require a logged-in user. */
 export const userCommandHandlers: Record<string, UserCommandHandler> = {
   addfeed: handlerAddFeed,
   follow: handlerFollow,
@@ -215,6 +242,7 @@ export const userCommandHandlers: Record<string, UserCommandHandler> = {
   browse: handlerBrowse,
 };
 
+/** Lists all feeds and the user who created each one. */
 async function handlerFeeds(cmdName: string, ...args: string[]) {
   const feeds = await getFeedsWithUsers();
   for (const feed of feeds) {
@@ -222,8 +250,10 @@ async function handlerFeeds(cmdName: string, ...args: string[]) {
   }
 }
 
+/** Registry mapping command names to their handlers. */
 export type CommandsRegistry = Record<string, CommandHandler>;
 
+/** Registers a command handler in the given registry under its command name. */
 export function registerCommand(
   registry: CommandsRegistry,
   cmdName: string,
@@ -232,6 +262,11 @@ export function registerCommand(
   registry[cmdName] = handler;
 }
 
+/**
+ * Looks up a command in the registry and runs it with the given arguments.
+ *
+ * @throws if the command name is not registered.
+ */
 export async function runCommand(
   registry: CommandsRegistry,
   cmdName: string,
