@@ -8,6 +8,34 @@
       "when": 1785867386683,
       "tag": "0000_special_black_bird",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785873598693,
+      "tag": "0001_curvy_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785961506522,
+      "tag": "0002_black_lord_tyger",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785961914327,
+      "tag": "0003_even_supreme_intelligence",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785962875793,
+      "tag": "0004_lowly_leper_queen",
+      "breakpoints": true
     }
   ]
 }

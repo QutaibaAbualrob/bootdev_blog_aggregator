@@ -4,9 +4,13 @@ import {
   handlerRegister,
   handlerReset,
   handlerUsers,
+  handlerAgg,
+  handlerFeeds,
+  userCommandHandlers,
   registerCommand,
   runCommand,
 } from "./commands.js";
+import { middlewareLoggedIn } from "./middleware.js";
 
 async function main() {
   const registry: CommandsRegistry = {};
@@ -14,6 +18,12 @@ async function main() {
   registerCommand(registry, "register", handlerRegister);
   registerCommand(registry, "reset", handlerReset);
   registerCommand(registry, "users", handlerUsers);
+  registerCommand(registry, "agg", handlerAgg);
+  registerCommand(registry, "feeds", handlerFeeds);
+
+  for (const [cmdName, handler] of Object.entries(userCommandHandlers)) {
+    registerCommand(registry, cmdName, middlewareLoggedIn(handler));
+  }
 
   const args = process.argv.slice(2);
 
