@@ -1,1 +1,3 @@
 node_modules/
+# local database config (contains your DB credentials)
+.gatorconfig.json

@@ -25,13 +25,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/QutaibaAbualrob/blog.git"
+    "url": "git+https://github.com/QutaibaAbualrob/bootdev_blog_aggregator.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/QutaibaAbualrob/blog/issues"
+    "url": "https://github.com/QutaibaAbualrob/bootdev_blog_aggregator/issues"
   },
-  "homepage": "https://github.com/QutaibaAbualrob/blog#readme"
+  "homepage": "https://github.com/QutaibaAbualrob/bootdev_blog_aggregator#readme"
 }
